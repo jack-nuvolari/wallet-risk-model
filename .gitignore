@@ -1,0 +1,38 @@
+__pycache__/
+*/__pycache__/
+
+# Environment and configuration files with secrets
+.env
+.env.local
+.env.*.local
+config_local.yml
+config_local.yaml
+
+# API keys and secrets
+*.key
+*.pem
+secrets.json
+secrets.yaml
+
+# Model files (can be large)
+ai/models/*.pkl
+ai/models/*.joblib
+
+# Data files (can be large)
+data/*.json
+data/*.csv
+data/*.parquet
+
+# Logs
+*.log
+logs/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
