@@ -75,19 +75,6 @@ Updates data sources based on command line arguments.
 - Error handling for each data source
 - Progress reporting and status updates
 
-#### `load_config(config_path)`
-Loads and validates configuration from YAML file.
-
-**Parameters:**
-- `config_path`: Path to configuration file
-
-**Returns:**
-- Configuration dictionary or None if error
-
-**Error Handling:**
-- File not found errors
-- YAML parsing errors
-
 ### 2. Model Training Functions
 
 #### `train_coin_risk_model()`
