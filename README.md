@@ -24,6 +24,7 @@ python test.py --update-all
 # Train risk models
 python test.py --train-model
 python test.py --train-pairwise-model
+python test.py --train-risk-weight-model
 
 # Analyze specific wallet
 python test.py --wallet 0x7a29aE65Bf25Dfb6e554BF0468a6c23ed99a8DC2
@@ -34,8 +35,6 @@ python test.py --wallet mock
 # Update specific data sources
 python test.py --update-uniswap --update-coins
 
-# Enable verbose output
-python test.py --update-all -v
 ```
 
 ### Available Commands
