@@ -5,56 +5,71 @@ A comprehensive system for analyzing cryptocurrency wallet risk through machine 
 ## Overview
 
 This system provides tools for:
+
 - **Data Collection**: Gathering real-time data from Uniswap, Aave, cryptocurrency markets, and news sources
 - **Risk Modeling**: Training machine learning models to predict coin and wallet risk scores
 - **Wallet Analysis**: Comprehensive risk assessment of cryptocurrency wallets
 - **DeFi Position Monitoring**: Tracking and analyzing DeFi protocol positions
 
+## Problem Statement
 
-## Usage
+This project aims to evaluate the **risk score of blockchain wallets**. It is relatively large and complex, as evaluating a wallet's risk score numerically is challenging and there is no definitive dataset for validation.
 
-### Command Line Interface
+To address this, we consider multiple factors, including:
 
-The main entry point is `test.py` which provides a comprehensive CLI:
+- Wallet balances
+- Active positions in DeFi protocols
+- Transaction history
 
-```bash
-# Update all data sources
-python test.py --update-all
+## Methodology
 
-# Train risk models
-python test.py --train-model
-python test.py --train-pairwise-model
-python test.py --train-risk-weight-model
+### 1. Component-Level Risk Evaluation
 
-# Analyze specific wallet
-python test.py --wallet 0x7a29aE65Bf25Dfb6e554BF0468a6c23ed99a8DC2
+Risk scores for different components of the wallet are calculated using a **hybrid approach**, combining **rule-based and AI-based methods**.
 
-# Use mock wallet for testing
-python test.py --wallet mock
+#### DeFi Protocols (Uniswap v3, Aave)
+- Metrics are derived from existing research and academic papers
+- While machine learning could be applied, leveraging expert research is more practical and saves time
 
-# Update specific data sources
-python test.py --update-uniswap --update-coins
+#### Individual Coins and Blockchain Networks
+- Rule-based methods are applied using metrics such as:
+  - Total market capitalization
+  - Maximum supply
+  - Current price
+  - Price volatility
+- Reference methodology: [Exponential Finance Whitepaper](https://exponential.fi/whitepaper#d3b1adf11d0d47468433d141f92e4450)
+- Additional research could refine assumptions or help develop new models
 
-```
+### 2. AI-Based Enhancements
 
-### Available Commands
+AI is suitable due to the **mathematical complexity** of DeFi risk assessment and the **lack of labeled training data**.
 
-| Command | Description |
-|---------|-------------|
-| `--update-all` | Update all data sources |
-| `--update-uniswap` | Update Uniswap pool data |
-| `--update-aave` | Update Aave market data |
-| `--update-coins` | Update cryptocurrency data |
-| `--update-news` | Update news sentiment data |
-| `--train-model` | Train coin risk regression model |
-| `--train-pairwise-model` | Train pairwise risk model |
-| `--wallet <ADDRESS>` | Analyze specific wallet address |
-| `--wallet-mock` | Use mock wallet data for analysis |
-| `--config <FILE>` | Use custom configuration file |
-| `--output-dir <DIR>` | Set custom output directory |
-| `-v, --verbose` | Enable verbose output |
-| `--debug` | Enable debug mode |
+Two main approaches were implemented:
 
+1. **Rule-Based Dataset Generation (`coinRiskModel`)**
+   - Training data is generated from predefined rule-based evaluations for coins, chains, and wallets
+
+2. **Pairwise Comparison Guided by Experts (`pairWiseModel`)**
+   - Relative risk between two entities (coins, chains, wallets) is compared using expert judgment or LLM guidance
+   - Effective because absolute risk scores are difficult to obtain, but expert comparisons are reliable
+
+### 3. Defining Risk Weights via AI
+
+AI is used to define **risk weights** applied when calculating the total risk score from individual component scores:
+
+- The total risk score is expressed as a **linear regression** over individual component scores
+- Coefficients (weights) are learned from training data generated via **pairwise comparisons**
+- This ensures the final score reflects both the relative importance of each component and expert-informed assessments
+
+### 4. Transaction-Level Risk Scoring
+
+Transaction-level risk is evaluated using:
+
+- Transaction amounts
+- Transaction frequency
+- Accounts interacted with
+
+This provides a granular understanding of wallet risk at the operational level.
 
 ## Core Functions
 
@@ -92,7 +107,6 @@ Trains the pairwise risk model for relative risk assessment.
 - Loads coin data from JSON
 - Trains pairwise comparison model
 - Handles training errors gracefully
-
 
 #### `risk_weight_model()`
 Trains the risk weight model using pairwise learning to optimize risk component weights.
@@ -148,7 +162,7 @@ Safely analyzes wallet risk with comprehensive error handling.
 - **Data**: Transaction history, token transfers, contract interactions
 - **Usage**: Wallet behavior analysis and risk scoring
 
-## Risk AI Models
+## AI Models
 
 ### 1. Coin Risk Model (`ai/coin_risk_model.py`)
 - **Type**: Regression model for absolute risk scoring
@@ -170,7 +184,6 @@ Safely analyzes wallet risk with comprehensive error handling.
 - **Outputs**:
   - `trained_risk_weights.json` with normalized weights (sum to 1)
   - `wallet_pairwise_training_meta.json` including `true_weights` used to generate labels
-
 
 ## Wallet Analysis
 
@@ -212,3 +225,66 @@ The wallet risk calculator evaluates multiple risk factors:
    - Protocol exposure
    - Position values
    - Risk level assessment
+
+## Usage
+
+### Command Line Interface
+
+The main entry point is `test.py` which provides a comprehensive CLI:
+
+```bash
+# Update all data sources
+python test.py --update-all
+
+# Train risk models
+python test.py --train-model
+python test.py --train-pairwise-model
+python test.py --train-risk-weight-model
+
+# Analyze specific wallet
+python test.py --wallet 0x7a29aE65Bf25Dfb6e554BF0468a6c23ed99a8DC2
+
+# Use mock wallet for testing
+python test.py --wallet mock
+
+# Update specific data sources
+python test.py --update-uniswap --update-coins
+```
+
+### Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `--update-all` | Update all data sources |
+| `--update-uniswap` | Update Uniswap pool data |
+| `--update-aave` | Update Aave market data |
+| `--update-coins` | Update cryptocurrency data |
+| `--update-news` | Update news sentiment data |
+| `--train-model` | Train coin risk regression model |
+| `--train-pairwise-model` | Train pairwise risk model |
+| `--wallet <ADDRESS>` | Analyze specific wallet address |
+| `--wallet-mock` | Use mock wallet data for analysis |
+| `--config <FILE>` | Use custom configuration file |
+| `--output-dir <DIR>` | Set custom output directory |
+| `-v, --verbose` | Enable verbose output |
+| `--debug` | Enable debug mode |
+
+## Future Improvements
+
+1. **Identify Additional Risk Factors**
+   - Explore more factors influencing wallet risk
+   - Estimate their contribution using hybrid methods
+   - Apply **Principal Component Analysis (PCA)** to understand factor importance
+
+2. **Expand AI Applications**
+   - Experiment with different model types and architectures
+   - Apply a **hybrid approach** combining rule-based and AI-based methods for specific use cases
+
+3. **Develop a Virtual Simulation Environment**
+   - Reconstruct historical blockchain data to create a realistic environment
+   - **Backtest risk models** to validate performance
+   - Implement **reinforcement learning with Direct Preference Optimization (DPO)** to iteratively improve model accuracy and robustness
+
+## References
+
+- [Exponential Finance Whitepaper](https://exponential.fi/whitepaper#d3b1adf11d0d47468433d141f92e4450)
