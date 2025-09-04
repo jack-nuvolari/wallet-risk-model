@@ -19,13 +19,14 @@ Final Score = max(1, min(100, round(Total Risk Score)))
 
 | Component | Weight | Description |
 |-----------|--------|-------------|
+| Balance Risk | 20% | Portfolio composition and token risk |
+| DeFi Positions | 10% | DeFi protocol exposure and position risk |
 | Transaction Frequency | 15% | Daily transaction patterns and frequency analysis |
 | Transaction Amounts | 15% | Volume analysis and amount distribution |
 | Interaction Patterns | 15% | Address diversity and interaction behavior |
 | Recent Activity | 10% | Recent transaction patterns and trends |
 | Contract Interactions | 15% | Smart contract interaction analysis |
-| Balance Risk | 20% | Portfolio composition and token risk |
-| DeFi Positions | 10% | DeFi protocol exposure and position risk |
+
 
 **Total Weight: 100%**
 
@@ -33,7 +34,49 @@ Final Score = max(1, min(100, round(Total Risk Score)))
 
 ## Risk Calculation Methods
 
-### 1. Transaction Frequency Risk (15%)
+
+### 1. Balance Risk (20%)
+
+**Purpose:** Assesses portfolio composition and individual token risk scores.
+
+**Risk Factors:**
+- **Individual Token Risk Scores:** Based on coin_data.json
+- **Unknown Token Penalty:** Default 0.8 risk score
+- **Portfolio Weighting:** Value-weighted risk calculation
+
+**Output Details:**
+- Portfolio risk score
+- Token breakdown with individual risks
+- Total portfolio value
+- Individual token values and risk scores
+
+---
+
+### 2. DeFi Position Risk (10%)
+
+**Purpose:** Evaluates DeFi protocol exposure and position-specific risks.
+
+**Risk Factors:**
+- **Protocol-Specific Risk:** Aave and Uniswap risk scores
+- **Position Value Weighting:** Value-weighted risk calculation
+- **Default Risk Levels:** Very low (0.2) to Very high (1.0)
+
+**Risk Level Mapping:**
+- `very_low`: 0.2
+- `low`: 0.4
+- `medium`: 0.6
+- `high`: 0.8
+- `very_high`: 1.0
+
+**Output Details:**
+- Overall position risk score
+- Total position value
+- Position count
+- Protocol-specific risk breakdown
+
+---
+
+### 3. Transaction Frequency Risk (15%)
 
 **Purpose:** Analyzes how frequently a wallet performs transactions and identifies unusual patterns.
 
@@ -57,7 +100,7 @@ Final Score = max(1, min(100, round(Total Risk Score)))
 
 ---
 
-### 2. Transaction Amounts Risk (15%)
+### 4. Transaction Amounts Risk (15%)
 
 **Purpose:** Evaluates transaction volume patterns, amount distribution, and volume-to-balance ratios.
 
@@ -85,7 +128,7 @@ Final Score = max(1, min(100, round(Total Risk Score)))
 
 ---
 
-### 3. Interaction Patterns Risk (15%)
+### 5. Interaction Patterns Risk (15%)
 
 **Purpose:** Assesses the diversity of addresses a wallet interacts with and identifies suspicious patterns.
 
@@ -105,7 +148,7 @@ Final Score = max(1, min(100, round(Total Risk Score)))
 
 ---
 
-### 4. Recent Activity Risk (10%)
+### 6. Recent Activity Risk (10%)
 
 **Purpose:** Analyzes recent transaction patterns and temporal behavior trends.
 
@@ -128,7 +171,7 @@ Final Score = max(1, min(100, round(Total Risk Score)))
 
 ---
 
-### 5. Contract Interaction Risk (15%)
+### 7. Contract Interaction Risk (15%)
 
 **Purpose:** Evaluates smart contract interactions and identifies suspicious contract behavior.
 
@@ -152,46 +195,7 @@ Final Score = max(1, min(100, round(Total Risk Score)))
 
 ---
 
-### 6. Balance Risk (20%)
 
-**Purpose:** Assesses portfolio composition and individual token risk scores.
-
-**Risk Factors:**
-- **Individual Token Risk Scores:** Based on coin_data.json
-- **Unknown Token Penalty:** Default 0.8 risk score
-- **Portfolio Weighting:** Value-weighted risk calculation
-
-**Output Details:**
-- Portfolio risk score
-- Token breakdown with individual risks
-- Total portfolio value
-- Individual token values and risk scores
-
----
-
-### 7. DeFi Position Risk (10%)
-
-**Purpose:** Evaluates DeFi protocol exposure and position-specific risks.
-
-**Risk Factors:**
-- **Protocol-Specific Risk:** Aave and Uniswap risk scores
-- **Position Value Weighting:** Value-weighted risk calculation
-- **Default Risk Levels:** Very low (0.2) to Very high (1.0)
-
-**Risk Level Mapping:**
-- `very_low`: 0.2
-- `low`: 0.4
-- `medium`: 0.6
-- `high`: 0.8
-- `very_high`: 1.0
-
-**Output Details:**
-- Overall position risk score
-- Total position value
-- Position count
-- Protocol-specific risk breakdown
-
----
 
 ## Risk Scoring System
 
