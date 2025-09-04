@@ -2,9 +2,9 @@ import os
 import json
 from typing import Dict, Tuple
 import numpy as np
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 class RiskWeightTrainer:
@@ -208,18 +208,22 @@ class RiskWeightTrainer:
         )
         
         if method == 'logreg':
-            model = LogisticRegression(random_state=42, max_iter=2000)
+            model = LinearRegression()
         else:
             # L1 penalty encourages sparsity -> more pronounced weight shifts after normalization
-            model = LogisticRegression(random_state=42, max_iter=4000, penalty='l1', solver='saga', C=C)
+            # Use Lasso for L1 regularization with LinearRegression-like behavior
+            from sklearn.linear_model import Lasso
+            model = Lasso(alpha=1.0/C, max_iter=4000, random_state=42)
         
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
-        accuracy = accuracy_score(y_test, y_pred)
-        print(f"Accuracy: {accuracy:.4f}")
+        mse = mean_squared_error(y_test, y_pred)
+        r2 = r2_score(y_test, y_pred)
+        print(f"Mean Squared Error: {mse:.4f}")
+        print(f"R² Score: {r2:.4f}")
         
         # Convert coefficients to normalized, positive weights
-        raw_weights = np.abs(model.coef_[0])
+        raw_weights = np.abs(model.coef_)
         if raw_weights.sum() == 0:
             raw_weights = np.ones_like(raw_weights)
         normalized_weights = raw_weights / np.sum(raw_weights)
