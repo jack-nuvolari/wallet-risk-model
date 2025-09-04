@@ -24,6 +24,7 @@ python test.py --update-all
 # Train risk models
 python test.py --train-model
 python test.py --train-pairwise-model
+python test.py --train-risk-weight-model
 
 # Analyze specific wallet
 python test.py --wallet 0x7a29aE65Bf25Dfb6e554BF0468a6c23ed99a8DC2
@@ -34,8 +35,6 @@ python test.py --wallet mock
 # Update specific data sources
 python test.py --update-uniswap --update-coins
 
-# Enable verbose output
-python test.py --update-all -v
 ```
 
 ### Available Commands
@@ -75,19 +74,6 @@ Updates data sources based on command line arguments.
 - Handles Uniswap, Aave, cryptocurrency, and news data updates
 - Error handling for each data source
 - Progress reporting and status updates
-
-#### `load_config(config_path)`
-Loads and validates configuration from YAML file.
-
-**Parameters:**
-- `config_path`: Path to configuration file
-
-**Returns:**
-- Configuration dictionary or None if error
-
-**Error Handling:**
-- File not found errors
-- YAML parsing errors
 
 ### 2. Model Training Functions
 
